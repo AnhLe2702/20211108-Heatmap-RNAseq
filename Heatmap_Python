@@ -1,0 +1,39 @@
+import numpy as np
+import csv
+import matplotlib.pyplot as plt
+import seaborn as sns
+data = []
+genes = []
+
+first = True 
+
+with open("/Users/ale/Desktop/RNAseq_Normalised RNA count_A673_pLKO,213,2341.csv") as csvfile:
+    csv_reader = csv.reader(csvfile, delimiter=",")
+    
+    for row in csv_reader:
+        
+        if first:
+            sample_names = row[1:] #The first row is the name of the condition
+            first = False
+            
+        else:
+            genes.append(row[0]) #First row is gene name
+            data.append(row[1:]) #Append the RNA read to data starting from row 1 onward 
+            
+            
+data = np.array(data).astype(float) #Convert all RNA read number into float data type
+
+#print(data)
+#print(len(genes))
+#print(len(sample_names))
+#print(data.shape)
+
+sns.set_context("paper",font_scale=0.3)
+sns_plot = sns.clustermap(data, xticklabels = sample_names, yticklabels = genes)
+
+sns_plot.savefig("heatmap.pdf")
+plt.show()
+
+#NOTE: If you run this code in Spyder or Jupyter, you'll get this error message: runfile('/Users/ale/.spyder-py3/temp.py', wdir='/Users/ale/.spyder-py3')
+/Users/ale/opt/anaconda3/lib/python3.8/site-packages/seaborn/matrix.py:654: UserWarning: Clustering large matrix with scipy. Installing `fastcluster` may give better performance.
+  warnings.warn(msg). The code seems to work but perhaps these two IDE on their own cannot create heatmap of too many data points. Might need a new IDE(?).
